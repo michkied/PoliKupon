@@ -14,9 +14,10 @@ import asyncpg
 from coupons import Coupons
 from servers import Servers
 from master_server import Masterserver
+import pathlib
 
 config = ConfigParser()
-config.read('config.ini')
+config.read(str(pathlib.Path(__file__).parent.absolute())+'\config.ini')
 info = config['INFO']
 db_info = config['DATABASE']
 
