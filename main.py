@@ -13,6 +13,7 @@ import asyncpg
 
 from coupons import Coupons
 from servers import Servers
+from master_server import Masterserver
 
 config = ConfigParser()
 config.read('config.ini')
@@ -38,7 +39,7 @@ async def on_ready():
 
 @bot.command()
 async def killapp(ctx):
-    if int(ctx.author.id) == int(info['owner_id']):
+    if int(ctx.author.id) == int(info['owner']):
         await ctx.send("**__Użycie tej komendy spowoduje wyłączenie bota. Aby potwierdzić decyzję odpisz 'TAK'__**")
 
         def check(msg):
@@ -61,6 +62,7 @@ if __name__ == '__main__':
 
     bot.add_cog(Coupons(bot))
     bot.add_cog(Servers(bot))
+    bot.add_cog(Masterserver(bot))
 
     bot.run(info['token'], reconnect=True)
 
