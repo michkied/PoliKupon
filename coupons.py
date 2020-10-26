@@ -100,6 +100,8 @@ class Coupons(commands.Cog):
         if await activated(self.db, ctx.channel) or isinstance(ctx.channel, discord.abc.PrivateChannel):
             coupons = await self.db.fetch('SELECT * FROM polikupon_kupony WHERE user_id = $1', str(ctx.author.id))
             await ctx.send(f':receipt: **Posiadasz `{len(coupons)}` kupon(y)**')
+        else:
+            await ctx.send(':x: **Bot nie jest aktywowany na tym serwerze!**')
 
     @commands.command()
     async def kupon(self, ctx, *, user=None):
@@ -194,4 +196,6 @@ class Coupons(commands.Cog):
                     await ctx.send(f':x: **Nie podano ucznia, którego kupony mają zostać sprawdzone**\nPoprawne użycie: `{self.bot.info["prefix"]}kupon <@użytkownik>`\nnp. `{self.bot.info["prefix"]}kupon @Jan Kowalski`')
                 else:
                     await ctx.send(':x: **Nie ma takiego ucznia**')
+        else:
+            await ctx.send(':x: **Bot nie jest aktywowany na tym serwerze!**')
 
