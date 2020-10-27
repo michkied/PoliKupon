@@ -9,7 +9,7 @@ class Masterserver(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        if str(payload.message_id) == self.bot.info['shop_message'] and payload.emoji.name == '💎':
+        if str(payload.message_id) == self.bot.info['shop_message'] and payload.emoji.name == self.bot.info['shop_emoji']:
             guild = self.bot.get_guild(int(self.bot.info['master_server']))
             if str(payload.user_id) not in (chan.name for chan in guild.text_channels):
                 false, true = discord.PermissionOverwrite(read_messages=False), discord.PermissionOverwrite(read_messages=True)
@@ -29,7 +29,7 @@ class Masterserver(commands.Cog):
                 await channel.send(text)
 
             message = await guild.get_channel(payload.channel_id).fetch_message(self.bot.info['shop_message'])
-            await message.remove_reaction('💎', payload.member)
+            await message.remove_reaction(self.bot.info['shop_emoji'], payload.member)
 
     @commands.command()
     async def archiwizuj(self, ctx, *, name=None):
