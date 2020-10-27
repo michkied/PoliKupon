@@ -31,7 +31,9 @@ class Coupons(commands.Cog):
             masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
             if ctx.author in masters and ctx.guild.id == int(self.bot.info['master_server']):
                 if None not in (user, first_name, last_name, klasa):
-                    student = discord.utils.get(ctx.guild.members, mention=user.replace('!', ''))
+                    student = discord.utils.get(ctx.guild.members, mention=user)
+                    if student is None:
+                        student = discord.utils.get(ctx.guild.members, mention=user.replace('!', ''))
                     if student is None:
                         student = discord.utils.get(ctx.guild.members, name=user)
                     if student is None:
@@ -112,9 +114,9 @@ class Coupons(commands.Cog):
                 student = ctx.author
 
             if student is None and user is not None:
-                print(user)
                 student = discord.utils.get(ctx.guild.members, mention=user)
-                print(student)
+                if student is None:
+                    student = discord.utils.get(ctx.guild.members, mention=user.replace('!', ''))
                 if student is None:
                     student = discord.utils.get(ctx.guild.members, name=user)
                 if student is None:
