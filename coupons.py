@@ -74,8 +74,11 @@ class Coupons(commands.Cog):
                         payload.append(text + fragment)
                         text = '>>> ' + fragment
 
-                if text != '>>> ':
-                    payload.append(text)
+                if text == '>>> ':
+                    await ctx.send(':x: **Nie ma żadnych zarejestrowanych kuponów**')
+                    return
+
+                payload.append(text)
 
                 if payload:
                     for chunk in payload:
