@@ -9,7 +9,7 @@ class Masterserver(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        if str(payload.message_id) == self.bot.info['shop_message'] and payload.emoji.name == self.bot.info['shop_emoji'] and str(payload.user_id) != self.bot.user.id:
+        if str(payload.message_id) == self.bot.info['shop_message'] and payload.emoji.name == self.bot.info['shop_emoji'] and payload.user_id != self.bot.user.id:
             guild = self.bot.get_guild(int(self.bot.info['master_server']))
             if str(payload.user_id) not in (chan.name for chan in guild.text_channels):
                 false, true = discord.PermissionOverwrite(read_messages=False), discord.PermissionOverwrite(read_messages=True)
