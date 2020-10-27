@@ -19,7 +19,7 @@ class Servers(commands.Cog):
     async def on_guild_join(self, guild):
         await self.log(f':new: Bot dołączył do nowego serwera {guild.name} (`{guild.id}`)')
         if guild.me.guild_permissions.administrator:
-            if str(guild.id) != self.bot.info('tchr_server'):
+            if str(guild.id) != self.bot.info['tchr_server']:
                 channel = await guild.create_text_channel('PoliKupon-setup', overwrites={guild.default_role: discord.PermissionOverwrite(read_messages=False)})
                 await channel.send(f'**Hej! :wave:**\nPierwszy krok za tobą - bot został poprawnie dodany na serwer!\n\n**Aby przejść dalej, podaj klucz aktywacyjny serwera** (musi to zrobić osoba z uprawnieniami administratora). Wyślij go jako wiadomość na tym kanale.\n:warning: Jeżeli nie zrobisz tego w ciągu 10 minut, bot opuści serwer.')
 
