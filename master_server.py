@@ -27,12 +27,13 @@ class Masterserver(commands.Cog):
 
                 await channel.send(master_role.mention, delete_after=1)
                 await channel.send(text)
-                message = await guild.get_channel(payload.channel_id).fetch_message(self.bot.info['shop_message'])
-                await message.remove_reaction('💎', payload.member)
+
+            message = await guild.get_channel(payload.channel_id).fetch_message(self.bot.info['shop_message'])
+            await message.remove_reaction('💎', payload.member)
 
     @commands.command()
     async def archiwizuj(self, ctx, *, name=None):
-        if isinstance(ctx.channel, discord.abc.GuildChannel):
+        if isinstance(ctx.channel, discord.abc.GuildChannel) and isinstance(ctx.channel, discord.TextChannel):
             if str(ctx.guild.id) == self.bot.info['master_server'] and len(ctx.channel.name) == 18:
                 user = ctx.guild.get_member(int(ctx.channel.name))
                 await ctx.channel.set_permissions(target=user, overwrite=discord.PermissionOverwrite(read_messages=False))
