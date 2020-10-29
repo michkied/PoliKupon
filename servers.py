@@ -50,7 +50,10 @@ class Servers(commands.Cog):
                 await self.log(f':teacher: Bot dołączył do serwera nauczycieli **{guild.name}** (`{guild.id}`)')
         else:
             await self.log(f':lock: Bot nie ma admina na serwerze {guild.name} (`{guild.id}`)')
-            await guild.text_channels[0].send(':x: **Do poprawnego działania bot wymaga uprawnień administratora. Dodaj bota jeszcze raz, zwracając uwagę na zaznaczenie odpowiedniego uprawnienia na karcie dodawania**')
+            try:
+                await guild.text_channels[0].send(':x: **Do poprawnego działania bot wymaga uprawnień administratora. Dodaj bota jeszcze raz, zwracając uwagę na zaznaczenie odpowiedniego uprawnienia na karcie dodawania**')
+            except discord.Forbidden:
+                pass
             await guild.leave()
 
     @commands.command()
