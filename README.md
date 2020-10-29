@@ -3,7 +3,7 @@
 PoliKupon to bot Discordowy obsługujący system Polilicealnikowych kuponów na nieprzygotowanie w czasie nauki zdalnej.
 Program napisany jest w języku Python (3.8) i wykorzystuje bazę danych PostgreSQL.
 Bot stworzony został z myślą o pracy na maszynie z systemem Linux, tak więc działanie na innych systemach operacyjnych może wymagać zmian w kodzie.
-Dane konfiguracyjne znajdują się w pliku `config.ini`.  
+Dane konfiguracyjne znajdują się w pliku `config.ini`. W razie pytań/sugestii zgłoś się do nas przez zakładkę Issues lub na serwerze Discord bota.
 
 ### Komendy bota:
 
