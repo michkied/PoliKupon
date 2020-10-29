@@ -20,7 +20,7 @@ class Servers(commands.Cog):
         await self.log(f':new: Bot dołączył do nowego serwera {guild.name} (`{guild.id}`)')
         if guild.me.guild_permissions.administrator:
             if str(guild.id) != self.bot.info['tchr_server']:
-                if not (await self.db.fetch('SELECT * FROM polikupon_klasy')):
+                if not (await self.db.fetch('SELECT * FROM polikupon_klasy WHERE server = $1', str(guild.id))):
                     channel = await guild.create_text_channel('PoliKupon-setup', overwrites={guild.default_role: discord.PermissionOverwrite(read_messages=False)})
                     await channel.send(f'**Hej! :wave:**\nPierwszy krok za tobą - bot został poprawnie dodany na serwer!\n\n**Aby przejść dalej, podaj klucz aktywacyjny serwera** (musi to zrobić osoba z uprawnieniami administratora). Wyślij go jako wiadomość na tym kanale.\n:warning: Jeżeli nie zrobisz tego w ciągu 10 minut, bot opuści serwer.')
 
