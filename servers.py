@@ -25,7 +25,9 @@ class Servers(commands.Cog):
                     await channel.send(f'**Hej! :wave:**\nPierwszy krok za tobą - bot został poprawnie dodany na serwer!\n\n**Aby przejść dalej, podaj klucz aktywacyjny serwera** (musi to zrobić osoba z uprawnieniami administratora). Wyślij go jako wiadomość na tym kanale.\n:warning: Jeżeli nie zrobisz tego w ciągu 10 minut, bot opuści serwer.')
 
                     def check(msg):
-                        return (msg.author == guild.owner or msg.author.guild_permissions.administrator) and msg.author != guild.me and msg.channel == channel
+                        if isinstance(msg.author, discord.Member):
+                            return (msg.author == guild.owner or msg.author.guild_permissions.administrator) and msg.author != guild.me and msg.channel == channel
+                        return False
 
                     while True:
                         try:
