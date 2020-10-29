@@ -20,31 +20,32 @@ class Servers(commands.Cog):
         await self.log(f':new: Bot dołączył do nowego serwera {guild.name} (`{guild.id}`)')
         if guild.me.guild_permissions.administrator:
             if str(guild.id) != self.bot.info['tchr_server']:
-                channel = await guild.create_text_channel('PoliKupon-setup', overwrites={guild.default_role: discord.PermissionOverwrite(read_messages=False)})
-                await channel.send(f'**Hej! :wave:**\nPierwszy krok za tobą - bot został poprawnie dodany na serwer!\n\n**Aby przejść dalej, podaj klucz aktywacyjny serwera** (musi to zrobić osoba z uprawnieniami administratora). Wyślij go jako wiadomość na tym kanale.\n:warning: Jeżeli nie zrobisz tego w ciągu 10 minut, bot opuści serwer.')
+                if not (await self.db.fetch('SELECT * FROM polikupon_klasy')):
+                    channel = await guild.create_text_channel('PoliKupon-setup', overwrites={guild.default_role: discord.PermissionOverwrite(read_messages=False)})
+                    await channel.send(f'**Hej! :wave:**\nPierwszy krok za tobą - bot został poprawnie dodany na serwer!\n\n**Aby przejść dalej, podaj klucz aktywacyjny serwera** (musi to zrobić osoba z uprawnieniami administratora). Wyślij go jako wiadomość na tym kanale.\n:warning: Jeżeli nie zrobisz tego w ciągu 10 minut, bot opuści serwer.')
 
-                await asyncio.sleep(2)
+                    def check(msg):
+                        return (msg.author == guild.owner or msg.author.guild_permissions.administrator) and msg.author != guild.me and msg.channel == channel
 
-                def check(msg):
-                    return (msg.author == guild.owner or msg.author.guild_permissions.administrator) and msg.author != guild.me and msg.channel == channel
-
-                while True:
-                    try:
-                        message = (await self.bot.wait_for('message', timeout=600, check=check)).content
-                    except asyncio.TimeoutError:
-                        await guild.leave()
-                        return
-
-                    key = (await self.db.fetchrow('SELECT * FROM polikupon_klasy WHERE key = $1', message))
-                    if key is not None:
-                        if not key['server']:
-                            await self.db.execute('UPDATE polikupon_klasy SET server = $1 WHERE key = $2', str(guild.id), key['key'])
-                            await channel.send(f':white_check_mark: **Serwer został poprawnie aktywowany :tada:**\nWszystko gotowe, miłego korzystania!')
-                            await self.log(f':closed_lock_with_key: Serwer **{guild.name}** (`{guild.id}`) został aktywowany kluczem `{message}` ({key["klasa"]})')
+                    while True:
+                        try:
+                            message = (await self.bot.wait_for('message', timeout=600, check=check)).content
+                        except asyncio.TimeoutError:
+                            await guild.leave()
                             return
 
-                    await channel.send(f':x: **Klucz `{message}` jest niepoprawny!**\nPodaj poprawny klucz aktywacyjny')
-                    await self.log(f':x: Podano niepoprawny klucz `{message}` na serwerze {guild.name} (`{guild.id}`)')
+                        key = (await self.db.fetchrow('SELECT * FROM polikupon_klasy WHERE key = $1', message))
+                        if key is not None:
+                            if not key['server']:
+                                await self.db.execute('UPDATE polikupon_klasy SET server = $1 WHERE key = $2', str(guild.id), key['key'])
+                                await channel.send(f':white_check_mark: **Serwer został poprawnie aktywowany :tada:**\nWszystko gotowe, miłego korzystania!')
+                                await self.log(f':closed_lock_with_key: Serwer **{guild.name}** (`{guild.id}`) został aktywowany kluczem `{message}` ({key["klasa"]})')
+                                return
+
+                        await channel.send(f':x: **Klucz `{message}` jest niepoprawny!**\nPodaj poprawny klucz aktywacyjny')
+                        await self.log(f':x: Podano niepoprawny klucz `{message}` na serwerze {guild.name} (`{guild.id}`)')
+                else:
+                    await self.log(f':unlock: Bot dołączył do serwera, który był już aktywowany **{guild.name}** (`{guild.id}`)')
             else:
                 await self.log(f':teacher: Bot dołączył do serwera nauczycieli **{guild.name}** (`{guild.id}`)')
         else:
