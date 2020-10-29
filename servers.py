@@ -26,7 +26,7 @@ class Servers(commands.Cog):
                 await asyncio.sleep(2)
 
                 def check(msg):
-                    return (msg.author == guild.owner or msg.author.guild_permissions.administrator) and msg.author != guild.me
+                    return (msg.author == guild.owner or msg.author.guild_permissions.administrator) and msg.author != guild.me and msg.channel == channel
 
                 while True:
                     try:
