@@ -6,13 +6,15 @@ Bot stworzony został z myślą o pracy na maszynie z systemem Linux, tak więc 
 Dane konfiguracyjne znajdują się w pliku `config.ini`. W razie pytań/sugestii zgłoś się do nas przez zakładkę Issues lub na serwerze Discord bota.
 
 ### Komendy bota:
-
+  
 ##### Dla uczniów:
 `.kupon` -  Rozpoczyna proces wykorzystania kuponu
 
 `.moje_kupony` - Wyświetla liczbę posiadanych kuponów
 
 `.pomoc` - Wyświetla instrukcję korzystania z bota
+
+&nbsp;
 
 ##### Dla moderatorów kuponów:
 `.nowy_kupon <@użytkownik> <imię> <nazwisko> <klasa>` - Rejestruje nowy kupon
@@ -23,7 +25,14 @@ Dane konfiguracyjne znajdują się w pliku `config.ini`. W razie pytań/sugestii
 
 `.archiwizuj [nazwa kanału]` - Archiwizuje kanał po zakończonych zakupach
 
+&nbsp;
+
 ##### Dla właściciela bota:
 `.keys` - Zarządza kluczami serwerów
 
 `.killapp` - Wyłącza bota 
+
+&nbsp;
+&nbsp;
+
+> Made with Python 3.8, PostgreSQL & ❤love❤ by Michał Kiedrzyński (michkied#6677)
