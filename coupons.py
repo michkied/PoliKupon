@@ -64,10 +64,10 @@ class Coupons(commands.Cog):
         if isinstance(ctx.channel, discord.abc.GuildChannel):
             masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
             if ctx.author in masters and ctx.guild.id == int(self.bot.info['master_server']):
-                coupons = sorted((await self.db.fetch('SELECT * FROM polikupon_kupony')), key=lambda i: (i['name'].split(' ')[1]))
+                coupons = sorted((await self.db.fetch('SELECT * FROM polikupon_kupony')), key=lambda i: (i['class']))
                 text, payload = '>>> ', []
                 for p, coupon in enumerate(coupons):
-                    fragment = f'`{p+1}.` **{coupon["name"]} {coupon["class"]}**  - `{coupon["user_id"]}`\n'
+                    fragment = f'`{p+1}.` **{coupon["class"]} {coupon["name"]}**  - `{coupon["user_id"]}`\n'
                     if len(text + fragment) < 2000:
                         text += fragment
                     else:
