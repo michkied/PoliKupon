@@ -23,10 +23,11 @@ class Masterserver(commands.Cog):
 
                 text = '**Hej!** :wave:\nDzięki za chęć kupienia gazetki!\n' \
                        'Aby dokonać zakupu, **wyślij na tym kanale swoje imię, nazwisko oraz klasę** i zaczekaj aż moderatorzy go zatwierdzą.\n\n' \
-                       f':warning: **__Pamiętaj, że decyzja o zakupie jest równoznaczna z akceptacją regulaminu oraz obowiązkiem zapłaty po powrocie do szkoły__**\n`{payload.user_id}`'
+                       ':warning: **__Pamiętaj, że decyzja o zakupie jest równoznaczna z akceptacją regulaminu oraz obowiązkiem zapłaty po powrocie do szkoły__**'
 
                 await channel.send(master_role.mention, delete_after=1)
                 await channel.send(text)
+                await channel.send(f'`{payload.user_id}`')
 
             message = await guild.get_channel(payload.channel_id).fetch_message(self.bot.info['shop_message'])
             await message.remove_reaction(self.bot.info['shop_emoji'], payload.member)
