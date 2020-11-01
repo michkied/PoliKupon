@@ -35,8 +35,8 @@ class Masterserver(commands.Cog):
     async def archiwizuj(self, ctx, *, name=None):
         if isinstance(ctx.channel, discord.abc.GuildChannel) and isinstance(ctx.channel, discord.TextChannel):
             if str(ctx.guild.id) == self.bot.info['master_server'] and len(ctx.channel.name) == 18:
-                user = ctx.guild.get_member(int(ctx.channel.name))
-                await ctx.channel.set_permissions(target=user, overwrite=discord.PermissionOverwrite(read_messages=False))
+                await ctx.channel.set_permissions(target=ctx.guild.get_member(int(ctx.channel.name)), overwrite=discord.PermissionOverwrite(read_messages=False))
+                await ctx.channel.set_permissions(target=ctx.guild.get_role(int(self.bot.info['master_role'])), overwrite=discord.PermissionOverwrite(read_messages=False))
                 if name is not None:
                     await ctx.channel.edit(name=name, category=ctx.guild.get_channel(int(self.bot.info['shop_archive_category'])))
                 else:
