@@ -42,5 +42,5 @@ class Masterserver(commands.Cog):
                 else:
                     await ctx.channel.edit(name=ctx.channel.name+'_archived', category=ctx.guild.get_channel(int(self.bot.info['shop_archive_category'])))
                 await ctx.message.delete()
-                await ctx.send('▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n**Transakcja zakończona**')
+                await ctx.send('▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n**Transakcja zakończona**')
 
