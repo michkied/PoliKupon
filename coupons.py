@@ -71,7 +71,7 @@ class Coupons(commands.Cog):
                     if len(text + fragment) < 2000:
                         text += fragment
                     else:
-                        payload.append(text + fragment)
+                        payload.append(text)
                         text = '>>> ' + fragment
 
                 if text == '>>> ':
