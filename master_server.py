@@ -23,7 +23,7 @@ class Masterserver(commands.Cog):
 
                 text = '**Hej!** :wave:\nDzięki za chęć kupienia gazetki!\n' \
                        'Aby dokonać zakupu, **wyślij na tym kanale swoje imię, nazwisko oraz klasę** i zaczekaj aż moderatorzy go zatwierdzą.\n\n' \
-                       ':warning: **__Pamiętaj, że decyzja o zakupie jest równoznaczna z akceptacją regulaminu oraz obowiązkiem zapłaty po powrocie do szkoły__**'
+                       f':warning: **__Pamiętaj, że decyzja o zakupie jest równoznaczna z akceptacją regulaminu oraz obowiązkiem zapłaty po powrocie do szkoły__**\n`{payload.user_id}`'
 
                 await channel.send(master_role.mention, delete_after=1)
                 await channel.send(text)
