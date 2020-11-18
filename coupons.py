@@ -52,7 +52,7 @@ class Coupons(commands.Cog):
                             max_id = max_id['max']
 
                         await self.db.execute('INSERT INTO polikupon_kupony(user_id, name, class, coupon_id) VALUES($1, $2, $3, $4)', str(student.id), name, klasa, max_id + 1)
-                        await ctx.send(f':white_check_mark: Dodano nowy kupon, którego właścicielem jest **{name}** (przypisany do użytkownika {student.mention})')
+                        await ctx.send(f':white_check_mark: Dodano nowy kupon, którego właścicielem jest **{name} {klasa}** (przypisany do użytkownika {student.mention})')
                         await self.log(f':inbox_tray: Zarejestrowano nowy kupon, którego właścicielem jest {name + " " + klasa} ({student} `{student.id}`)')
                     else:
                         await ctx.send(':x: **Taki użytkownik nie istnieje!**')
