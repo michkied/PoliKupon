@@ -20,6 +20,7 @@ class Coupons(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.db = bot.db
+        self.running = []
 
     async def log(self, message):
         log = self.bot.get_channel(int(self.bot.info['log_channel']))
@@ -133,7 +134,13 @@ class Coupons(commands.Cog):
 
             if student is not None:
                 kupon = await self.db.fetchrow('SELECT * FROM polikupon_kupony WHERE user_id = $1', str(student.id))
+
+                if student.id in self.running:
+                    await ctx.send(':x: **Proces został już rozpoczęty w innym miejscu**')
+                    return
+
                 if kupon:
+                    self.running.append(student.id)
                     waiting, ready = ':arrows_counterclockwise: Oczekiwanie na zatwierdzenie', ':white_check_mark: Zatwierdzono'
                     text = '**__KUPON__**\n' \
                            f'Właścicielem/ką tego kuponu jest **{kupon["name"]}** z klasy **{kupon["class"]}**.\n' \
@@ -156,6 +163,7 @@ class Coupons(commands.Cog):
                             embed = discord.Embed(description=':alarm_clock: **Czas na zatwierdzenie kuponu minął**')
                             await message.edit(embed=embed)
                             await message.remove_reaction('✅', ctx.guild.me)
+                            self.running.remove(student.id)
                             return
 
                         rct_users = await reaction.users().flatten()
@@ -183,11 +191,13 @@ class Coupons(commands.Cog):
                         else:
                             tch_state = waiting
 
-                        embed = discord.Embed(description=text.format(tch_state, std_state), color=0xfffffe)
-                        embed.set_thumbnail(url='https://i.imgur.com/pFY5I2P.jpg')
-                        await message.edit(embed=embed)
+                        if not (std_agree and tch_agree):
+                            embed = discord.Embed(description=text.format(tch_state, std_state), color=0xfffffe)
+                            embed.set_thumbnail(url='https://i.imgur.com/pFY5I2P.jpg')
+                            await message.edit(embed=embed)
 
                     await self.db.execute('DELETE FROM polikupon_kupony WHERE coupon_id = $1', kupon['coupon_id'])
+                    self.running.remove(student.id)
                     embed = discord.Embed(description=f'**__:receipt: KUPON WYKORZYSTANY__**\n\nWłaściciel: {student.mention}\nNauczyciel: {teacher.mention}', color=0xfffffe)
                     embed.set_thumbnail(url='https://i.imgur.com/pFY5I2P.jpg')
                     await message.edit(embed=embed)
