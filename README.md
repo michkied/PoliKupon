@@ -8,14 +8,11 @@ Dane konfiguracyjne znajdują się w pliku `config.ini`. W razie pytań/sugestii
 
 &nbsp;
 
-### Komendy bota:
-  
+### Komendy bota:  
 ##### Dla uczniów:
 `.kupon` -  Rozpoczyna proces wykorzystania kuponu  
 `.moje_kupony` - Wyświetla liczbę posiadanych kuponów  
 `.pomoc` - Wyświetla instrukcję korzystania z bota
-
-&nbsp;
 
 ##### Dla moderatorów kuponów:
 `.nowy_kupon <@użytkownik> <imię> <nazwisko> <klasa>` - Rejestruje nowy kupon  
@@ -23,13 +20,10 @@ Dane konfiguracyjne znajdują się w pliku `config.ini`. W razie pytań/sugestii
 `.usun_kupon <ID użytkownika>` - Usuwa kupon danego użytkownika  
 `.archiwizuj [nazwa kanału]` - Archiwizuje kanał po zakończonych zakupach
 
-&nbsp;
-
 ##### Dla właściciela bota:
 `.keys` - Zarządza kluczami serwerów  
 `.killapp` - Wyłącza bota 
 
-&nbsp;
 &nbsp;
 
 > Made with Python 3.8, PostgreSQL & ❤love❤ by Michał Kiedrzyński (michkied#6677)
