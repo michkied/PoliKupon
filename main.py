@@ -74,6 +74,11 @@ if __name__ == '__main__':
 
     bot.info = info
 
+    if info['shop_active'] == 'y':
+        bot.shop_is_on = True
+    else:
+        bot.shop_is_on = False
+
     bot.add_cog(Coupons(bot))
     bot.add_cog(Servers(bot))
     bot.add_cog(Masterserver(bot))

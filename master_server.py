@@ -9,7 +9,7 @@ class Masterserver(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        if str(payload.message_id) == self.bot.info['shop_message'] and payload.emoji.name == self.bot.info['shop_emoji'] and payload.user_id != self.bot.user.id and self.bot.info['shop_active'] == 'y':
+        if str(payload.message_id) == self.bot.info['shop_message'] and payload.emoji.name == self.bot.info['shop_emoji'] and payload.user_id != self.bot.user.id and self.bot.shop_is_on:
             guild = self.bot.get_guild(int(self.bot.info['master_server']))
             if str(payload.user_id) not in (chan.name for chan in guild.text_channels):
                 false, true = discord.PermissionOverwrite(read_messages=False), discord.PermissionOverwrite(read_messages=True)
@@ -35,7 +35,8 @@ class Masterserver(commands.Cog):
     @commands.command()
     async def archiwizuj(self, ctx, *, name=None):
         if isinstance(ctx.channel, discord.abc.GuildChannel) and isinstance(ctx.channel, discord.TextChannel):
-            if str(ctx.guild.id) == self.bot.info['master_server'] and len(ctx.channel.name) == 18:
+            masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
+            if str(ctx.guild.id) == self.bot.info['master_server'] and len(ctx.channel.name) == 18 and ctx.author in masters:
                 await ctx.channel.set_permissions(target=ctx.guild.get_member(int(ctx.channel.name)), overwrite=discord.PermissionOverwrite(read_messages=False))
                 await ctx.channel.set_permissions(target=ctx.guild.get_role(int(self.bot.info['master_role'])), overwrite=discord.PermissionOverwrite(read_messages=False))
                 if name is not None:
@@ -45,3 +46,16 @@ class Masterserver(commands.Cog):
                 await ctx.message.delete()
                 await ctx.send('▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n**Transakcja zakończona**')
 
+    @commands.command()
+    async def wlacz_sklep(self, ctx):
+        if isinstance(ctx.channel, discord.abc.GuildChannel) and isinstance(ctx.channel, discord.TextChannel):
+            masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
+            if str(ctx.guild.id) == self.bot.info['master_server'] and ctx.author in masters:
+                self.bot.shop_is_on = True
+
+    @commands.command()
+    async def wylacz_sklep(self, ctx):
+        if isinstance(ctx.channel, discord.abc.GuildChannel) and isinstance(ctx.channel, discord.TextChannel):
+            masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
+            if str(ctx.guild.id) == self.bot.info['master_server'] and ctx.author in masters:
+                self.bot.shop_is_on = False
