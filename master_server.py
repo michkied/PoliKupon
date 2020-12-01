@@ -52,7 +52,7 @@ class Masterserver(commands.Cog):
             masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
             if str(ctx.guild.id) == self.bot.info['master_server'] and ctx.author in masters:
                 self.bot.shop_is_on = True
-                await ctx.sedn(':white_check_mark: **Sklep włączony**')
+                await ctx.send(':white_check_mark: **Sklep włączony**')
 
     @commands.command()
     async def wylacz_sklep(self, ctx):
@@ -60,4 +60,4 @@ class Masterserver(commands.Cog):
             masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
             if str(ctx.guild.id) == self.bot.info['master_server'] and ctx.author in masters:
                 self.bot.shop_is_on = False
-                await ctx.sedn('**Sklep wyłączony**')
+                await ctx.send('**Sklep wyłączony**')
