@@ -18,8 +18,9 @@ import pathlib
 
 config = ConfigParser()
 config.read(str(pathlib.Path(__file__).parent.absolute())+'/config.ini')
-info = config['INFO']
-db_info = config['DATABASE']
+info = dict(config['INFO'])
+db_info = dict(config['DATABASE'])
+info['owners'] = info['owners'].split('-')
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix=info['prefix'], intents=intents)
@@ -41,15 +42,14 @@ async def on_ready():
 
 @bot.command()
 async def killapp(ctx):
-    if int(ctx.author.id) == int(info['owner']):
-        await ctx.send("**__Użycie tej komendy spowoduje wyłączenie bota. Aby potwierdzić decyzję odpisz 'TAK'__**")
+    if str(ctx.author.id) in info['owners']:
+        await ctx.send("**__Użycie tej komendy spowoduje wyłączenie bota. Aby potwierdzić decyzję odpisz `TAK`__**")
 
         def check(msg):
             return msg.content.startswith('TAK') and msg.author == ctx.author
 
-        message = await bot.wait_for('message', timeout=5, check=check)
-        kod = message.content.strip()
-        if kod == "TAK":
+        message = (await bot.wait_for('message', timeout=5, check=check)).content
+        if message == "TAK":
             await ctx.send("Wyłączanie...")
             await bot.close()
             await bot.db.close()

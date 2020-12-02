@@ -12,8 +12,7 @@ class Servers(commands.Cog):
         self.db = bot.db
 
     async def log(self, message):
-        log = self.bot.get_channel(int(self.bot.info['log_channel']))
-        await log.send(f'`{datetime.now().strftime("%d.%m.%Y  %H:%M:%S")}` {message}')
+        await self.bot.get_channel(int(self.bot.info['log_channel'])).send(f'`{datetime.now().strftime("%d.%m.%Y  %H:%M:%S")}` {message}')
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -60,7 +59,7 @@ class Servers(commands.Cog):
 
     @commands.command()
     async def keys(self, ctx, arg1=None, *, arg2=None):
-        if int(ctx.author.id) == int(self.bot.info['owner']):
+        if str(ctx.author.id) in self.bot.info['owners']:
             if arg1 == 'list':
                 keys = sorted(await self.db.fetch('SELECT * FROM polikupon_klasy'), key=lambda i: (i['klasa']))
                 text = '>>> '

@@ -2,6 +2,7 @@ from discord.ext import commands
 from datetime import datetime
 import discord
 import asyncio
+import random
 
 
 async def activated(db, arg):
@@ -23,14 +24,13 @@ class Coupons(commands.Cog):
         self.running = []
 
     async def log(self, message):
-        log = self.bot.get_channel(int(self.bot.info['log_channel']))
-        await log.send(f'`{datetime.now().strftime("%d.%m.%Y  %H:%M:%S")}` {message}')
+        await self.bot.get_channel(int(self.bot.info['log_channel'])).send(f'`{datetime.now().strftime("%d.%m.%Y  %H:%M:%S")}` {message}')
 
     @commands.command()
     async def nowy_kupon(self, ctx, user=None, first_name=None, last_name=None, klasa=None):
         if isinstance(ctx.channel, discord.abc.GuildChannel):
-            masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
-            if ctx.author in masters and ctx.guild.id == int(self.bot.info['master_server']):
+            sellers = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['seller_role'])).members
+            if ctx.author in sellers and ctx.guild.id == int(self.bot.info['master_server']):
                 if None not in (user, first_name, last_name, klasa):
                     student = discord.utils.get(ctx.guild.members, mention=user)
                     if student is None:
@@ -58,13 +58,13 @@ class Coupons(commands.Cog):
                     else:
                         await ctx.send(':x: **Taki użytkownik nie istnieje!**')
                 else:
-                    await ctx.send(f':x: **Użyłeś niepoprawnej liczby argumentów**\nPoprawne użycie komendy: `{self.bot.info["prefix"]}nowy_kupon <@użytkownik> <imię> <nazwisko> <klasa>`')
+                    await ctx.send(f':x: **Użyto niepoprawnej liczby argumentów**\nPoprawne użycie komendy: `{self.bot.info["prefix"]}nowy_kupon <@użytkownik> <imię> <nazwisko> <klasa>`')
 
     @commands.command()
     async def kupony(self, ctx):
         if isinstance(ctx.channel, discord.abc.GuildChannel):
-            masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
-            if ctx.author in masters and ctx.guild.id == int(self.bot.info['master_server']):
+            sellers = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['seller_role'])).members
+            if ctx.author in sellers and ctx.guild.id == int(self.bot.info['master_server']):
                 coupons = sorted((await self.db.fetch('SELECT * FROM polikupon_kupony')), key=lambda i: (i['class']))
                 text, payload = '>>> ', []
                 for p, coupon in enumerate(coupons):
@@ -88,8 +88,8 @@ class Coupons(commands.Cog):
     @commands.command()
     async def usun_kupon(self, ctx, user_id=None):
         if isinstance(ctx.channel, discord.abc.GuildChannel):
-            masters = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['master_role'])).members
-            if ctx.author in masters and ctx.guild.id == int(self.bot.info['master_server']):
+            seller = self.bot.get_guild(int(self.bot.info['master_server'])).get_role(int(self.bot.info['seller_role'])).members
+            if ctx.author in seller and ctx.guild.id == int(self.bot.info['master_server']):
                 if user_id is not None:
                     coupon = await self.db.fetchrow('SELECT * FROM polikupon_kupony WHERE user_id = $1', user_id)
                     if coupon:
@@ -106,6 +106,14 @@ class Coupons(commands.Cog):
         if await activated(self.db, ctx.channel) or isinstance(ctx.channel, discord.abc.PrivateChannel):
             coupons = await self.db.fetch('SELECT * FROM polikupon_kupony WHERE user_id = $1', str(ctx.author.id))
             await ctx.send(f':receipt: **Posiadasz `{len(coupons)}` kupon(y)**')
+
+            def check(m):
+                return 'dzieki' in m.content.lower().replace('ę', 'e') and m.author == ctx.author and m.channel == ctx.channel
+            try:
+                await self.bot.wait_for('message', timeout=15, check=check)
+                await ctx.send(random.choice(['luz', 'spoko', 'nie ma sprawy', 'do usług', 'łatwo', 'glhf', 'chill', ':sunglasses:', ':pleading_face:', ':+1:']))
+            except asyncio.TimeoutError:
+                pass
         else:
             await ctx.send(':x: **Bot nie jest aktywowany na tym serwerze!**')
 
@@ -133,17 +141,17 @@ class Coupons(commands.Cog):
                 student = None
 
             if student is not None:
-                kupon = await self.db.fetchrow('SELECT * FROM polikupon_kupony WHERE user_id = $1', str(student.id))
+                coupon = await self.db.fetchrow('SELECT * FROM polikupon_kupony WHERE user_id = $1', str(student.id))
 
                 if student.id in self.running:
                     await ctx.send(':x: **Proces został już rozpoczęty w innym miejscu**')
                     return
 
-                if kupon:
+                if coupon:
                     self.running.append(student.id)
                     waiting, ready = ':arrows_counterclockwise: Oczekiwanie na zatwierdzenie', ':white_check_mark: Zatwierdzono'
                     text = '**__KUPON__**\n' \
-                           f'Właścicielem/ką tego kuponu jest **{kupon["name"]}** z klasy **{kupon["class"]}**.\n' \
+                           f'Właścicielem/ką tego kuponu jest **{coupon["name"]}** z klasy **{coupon["class"]}**.\n' \
                            'Wykorzystanie kuponu wymaga zatwierdzenia przez nauczyciela i ucznia, poprzez wciśnięcie reakcji :white_check_mark: pod tą wiadomością.\n\n' \
                            'Nauczyciel: **{}**\nUczeń: **{}**'
 
@@ -196,13 +204,13 @@ class Coupons(commands.Cog):
                             embed.set_thumbnail(url='https://i.imgur.com/pFY5I2P.jpg')
                             await message.edit(embed=embed)
 
-                    await self.db.execute('DELETE FROM polikupon_kupony WHERE coupon_id = $1', kupon['coupon_id'])
+                    await self.db.execute('DELETE FROM polikupon_kupony WHERE coupon_id = $1', coupon['coupon_id'])
                     self.running.remove(student.id)
                     embed = discord.Embed(description=f'**__:receipt: KUPON WYKORZYSTANY__**\n\nWłaściciel: {student.mention}\nNauczyciel: {teacher.mention}', color=0xfffffe)
                     embed.set_thumbnail(url='https://i.imgur.com/pFY5I2P.jpg')
                     await message.edit(embed=embed)
 
-                    await self.log(f':outbox_tray: Wykorzystano kupon należący do {kupon["name"] + " " + kupon["class"]} (`{student.id}`). Nauczycielem podpisującym był {teacher}')
+                    await self.log(f':outbox_tray: Wykorzystano kupon należący do {coupon["name"] + " " + coupon["class"]} (`{student.id}`). Nauczycielem podpisującym był {teacher}')
                 else:
                     await ctx.send(f':x: **Uczeń {student.mention} nie posiada żadnego kuponu**')
 

@@ -18,7 +18,9 @@ Dane konfiguracyjne znajdują się w pliku `config.ini`. W razie pytań/sugestii
 `.usun_kupon <ID użytkownika>` - Usuwa kupon danego użytkownika  
 `.archiwizuj [nazwa kanału]` - Archiwizuje kanał po zakończonych zakupach
 
-##### Dla właściciela bota:
+##### Dla właścicieli bota:
+`.wlacz_sklep` - Włącza sklep  
+`.wylacz_sklep` - Wyłącza sklep  
 `.keys` - Zarządza kluczami serwerów  
 `.killapp` - Wyłącza bota 
 
