@@ -36,7 +36,7 @@ async def on_ready():
     print(date.strftime('%d.%m.%Y  %H:%M'))
     print('by Michał Kiedrzyński')
     print('------')
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="instagr.am/_tempest_official_/"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="instagr.am/_tempest_official_"))
     await bot.get_channel(id=int(info['log_channel'])).send(content=date.strftime("`%H:%M:%S` Połączono"))
     await (await bot.get_channel(int(info['shop_channel'])).fetch_message(int(info['shop_message']))).add_reaction(info['shop_emoji'])
 
