@@ -52,6 +52,7 @@ class Masterserver(commands.Cog):
             if str(ctx.guild.id) == self.bot.info['master_server'] and str(ctx.author.id) in self.bot.info['owners']:
                 self.bot.shop_is_on = True
                 await ctx.send(':white_check_mark: **Sklep włączony**')
+                await (await self.bot.get_channel(int(self.bot.info['shop_channel'])).fetch_message(int(self.bot.info['shop_message']))).add_reaction(self.bot.info['shop_emoji'])
 
     @commands.command()
     async def wylacz_sklep(self, ctx):
