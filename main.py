@@ -69,6 +69,11 @@ async def pomoc(ctx):
     await ctx.send(text.format(info['prefix']))
 
 
+@bot.command()
+async def ziobro(ctx):
+    await ctx.author.send('Przestań mi rodzinę prześladować')
+
+
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     bot.db = loop.run_until_complete(asyncpg.create_pool(user=db_info['user'], database=db_info['database_name'], password=db_info['password'], max_size=15))
